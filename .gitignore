@@ -1,0 +1,6 @@
+#Ignore everything
+*
+
+#...Everything but my .vimrc and the .gitignore itself
+!.vimrc
+!.gitignore

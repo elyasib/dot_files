@@ -1,8 +1,7 @@
-
 set nocompatible              " be iMproved, required
-"colorscheme
 filetype off                  " required
 set rtp+=~/.vim/bundle/Vundle.vim
+
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'groenewege/vim-less'
@@ -11,13 +10,14 @@ Plugin 'gre/play2vim'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'othree/html5.vim'
 call vundle#end()
+
 filetype plugin indent on
 syntax enable
-set showmatch     " set show matching parenthesis
-set ignorecase    " ignore case when searching
-set smartcase     " ignore case if search pattern is all lowercase,
-set hlsearch      " highlight
-set incsearch     " show search
+set showmatch     
+set ignorecase    
+set smartcase     
+set hlsearch      
+set incsearch     
 set nowrap
 set hidden
 set tabstop=4
@@ -35,6 +35,6 @@ map <up> <nop>
 map <down> <nop>
 map <left> <nop>
 map <right> <nop>
-cmap w!! w !sudo tee % >/dev/null
-nmap <silent> ,/ :nohlsearch<CR>
+cmap w!! w !sudo tee % >/dev/null    " w!! to save changes to a file that requieres sudo 
+nmap <silent> ,/ :nohlsearch<CR>     " ,/ to clear the highlight after searching
 set pastetoggle=<F2>
