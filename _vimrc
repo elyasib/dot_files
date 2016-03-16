@@ -160,4 +160,10 @@ function! Uncomment()
   endif
 endfunction
 
+"Copy search results to a new buffer
 command! -nargs=? GetLines let @a='' | execute 'g/<args>/y A' | new | setlocal bt=nofile | put! a
+
+"scala autoformat
+noremap <F5> :Autoformat<CR>
+let g:formatdef_scalafmt = "'scalafmt'"
+let g:formatters_scala = ['scalafmt']

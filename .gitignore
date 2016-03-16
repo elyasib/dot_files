@@ -2,5 +2,8 @@
 *
 
 #...Everything but my .vimrc and the .gitignore itself
-!.vimrc
+!_vimrc
 !.gitignore
+
+#aand .bash related files
+!.bash*
