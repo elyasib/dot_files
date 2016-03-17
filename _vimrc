@@ -161,7 +161,7 @@ function! Uncomment()
 endfunction
 
 "Copy search results to a new buffer
-command! -nargs=? GetLines let @a='' | execute 'g/<args>/y A' | new | setlocal bt=nofile | put! a
+command! -nargs=? gl let @a='' | execute 'g/<args>/y A' | new | setlocal bt=nofile | put! a
 
 "scala autoformat
 noremap <F5> :Autoformat<CR>
