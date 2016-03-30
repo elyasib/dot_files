@@ -19,6 +19,7 @@ Plugin 'tpope/vim-surround'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'elzr/vim-json'
+Plugin 'Chiel92/vim-autoformat'
 call vundle#end()
 
 filetype plugin indent on
@@ -161,9 +162,15 @@ function! Uncomment()
 endfunction
 
 "Copy search results to a new buffer
-command! -nargs=? gl let @a='' | execute 'g/<args>/y A' | new | setlocal bt=nofile | put! a
+command! -nargs=? Gl let @a='' | execute 'g/<args>/y A' | new | setlocal bt=nofile | put! a
 
 "scala autoformat
 noremap <F5> :Autoformat<CR>
 let g:formatdef_scalafmt = "'scalafmt'"
 let g:formatters_scala = ['scalafmt']
+
+"Automatically reload vimrc
+augroup myvimrc
+  au!
+  au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+augroup END
