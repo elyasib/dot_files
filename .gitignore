@@ -1,9 +1,12 @@
-#Ignore everything
+# Ignore everything
 *
 
-#...Everything but my .vimrc and the .gitignore itself
+# ...Everything but my .vimrc and the .gitignore itself
 !_vimrc
 !.gitignore
 
-#aand .bash related files
+# and .bash related files
 !.bash*
+
+# and .bash related files
+!.tmux*
