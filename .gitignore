@@ -22,3 +22,7 @@
 !.oh-my-zsh
 !.zshrc
 !.zshrc.pre-oh-my-zsh
+
+# Font
+!InputNerdFont.ttf
+
