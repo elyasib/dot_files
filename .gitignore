@@ -8,5 +8,17 @@
 # and .bash related files
 !.bash*
 
-# and .bash related files
+# and .tmux
 !.tmux*
+
+# ctags
+!.ctags
+
+# ctags
+!.gitconfig
+!.gitignore_global
+
+# zsh
+!.oh-my-zsh
+!.zshrc
+!.zshrc.pre-oh-my-zsh
