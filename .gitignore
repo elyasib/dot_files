@@ -26,3 +26,5 @@
 # Font
 !InputNerdFont.ttf
 
+# brew
+!brew_install.sh
