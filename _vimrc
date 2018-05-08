@@ -4,7 +4,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
-Plugin 'groenewege/vim-less'
+"Plugin 'groenewege/vim-less'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'gre/play2vim'
 Plugin 'derekwyatt/vim-scala'
@@ -16,28 +16,40 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-surround' "ysiw<symbol>: add symbol, ds: remove, cs<oldSymbol><newSymbol>: replace
 Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'kchmck/vim-coffee-script'
+"Plugin 'kchmck/vim-coffee-script'
 Plugin 'elzr/vim-json'
 Plugin 'Chiel92/vim-autoformat'
 Plugin 'elubow/cql-vim'
-Plugin 'IN3D/vim-raml'
+"Plugin 'IN3D/vim-raml'
 Plugin 'felixhummel/setcolors.vim'
 Plugin 'rking/ag.vim'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'tomtom/tcomment_vim' "gc or gcc
+Plugin 'ctrlpvim/ctrlp.vim' "<C-p>: search
+Plugin 'tomtom/tcomment_vim' "gcc: to add comments
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'ryanoasis/vim-devicons'
+Plugin 'Shougo/denite.nvim'
+Plugin 'udalov/kotlin-vim'
+Plugin 'ensime/ensime-vim'
 call vundle#end()
 
 filetype plugin indent on
 syntax enable
 
+"Automatically reload vimrc
+augroup myvimrc
+  au!
+  au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+augroup END
+
 " line numbers
 set number
 :highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+
+" signal max characters line
+set colorcolumn=140
 
 " leader key
 let mapleader = ','
@@ -80,7 +92,7 @@ set expandtab
 " Be smart when using tabs ;)
 set smarttab
 " 1 tab == 2 spaces
-set shiftwidth=2
+set shiftwidth=4
 set tabstop=2
 set shiftround
 
@@ -98,6 +110,14 @@ nmap <silent> ,/ :nohlsearch<CR>     " ,/ to clear the highlight after searching
 set pastetoggle=<F2>
 nmap <S-Enter> O<Esc>j               " Insert new line above the cursor, without entering insert mode
 nmap <CR> o<Esc>k                    " Insert new line below the cursor, without entering insert mode
+
+" show the whole filename
+nmap <space>n :echo expand('%:p')<CR>
+
+" diff current files
+nmap <space>d :windo diffthis<CR>
+" diff off
+nmap <space>f :diffoff<CR>
 
 "gruvbox config
 set background=dark
@@ -134,7 +154,10 @@ set fillchars+=stl:\ ,stlnc:\
 "set term=xterm-256color
 set termencoding=utf-8
 
+""""""""""""""""
 "NERDTree
+""""""""""""""""
+
 "autocmd vimenter * NERDTree
 map <C-n> :NERDTreeToggle<CR>
 let g:NERDTreeIndicatorMapCustom = {
@@ -156,10 +179,13 @@ let NERDTreeIgnore = ['\.pyc$', '\.DS_Store$', '\.swp$', '\.swo$']
 
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 let g:webdevicons_conceal_nerdtree_brackets = 1
-"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
 let g:WebDevIconsOS = 'Darwin'
 let g:webdevicons_conceal_nerdtree_brackets = 1
+"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+
+" temporal fix for slow scrolling
+set lazyredraw
 
 
 " vim-devicons {{{
@@ -184,17 +210,37 @@ noremap <F5> :Autoformat<CR>
 let g:formatdef_scalafmt = "'scalafmt'"
 let g:formatters_scala = ['scalafmt']
 
-"Automatically reload vimrc
-augroup myvimrc
-  au!
-  au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
-augroup END
-
 "Ctags
 set tags=tags;/
 
 " Allow editing crontab
 autocmd FileType crontab setlocal nowritebackup
+
+" Denite
+call denite#custom#var('file_rec', 'command',
+      \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+nnoremap <space>/ :Denite grep:.<cr>
+
+" yank and paste from clipboard
+set clipboard=unnamed
+
+"""""""""""""""
+" ensime config
+"""""""""""""""
+
+" type checking
+"autocmd BufWritePost *.scala silent :EnTypeCheck
+"nnoremap <localleader>t :EnType<CR>
+nnoremap <buffer> <silent> tt :EnType<CR>
+nnoremap <buffer> <silent> t] :EnDeclaration<CR>
+nnoremap <buffer> <silent> t[ :EnDeclarationSplit v<CR>
+nnoremap <buffer> <silent> td :EnDocBrowse<CR>
+nnoremap <buffer> <silent> ti :EnSuggestImport<CR>
+nnoremap <buffer> <silent> tc :EnTypeCheck<CR>
+nnoremap tr :EnRename<CR>
+
+" ctrlp
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 
 " vim-devicons
 set encoding=utf8
