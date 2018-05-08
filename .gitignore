@@ -28,3 +28,6 @@
 
 # brew
 !brew_install.sh
+
+# pip
+!pip.sh
