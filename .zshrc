@@ -1,3 +1,17 @@
+# Vi mode
+set -o vi
+export VISUAL=vi
+export BROWSER="firefox %s"
+
+### PYTHON ###
+export PIP_CONFIG_FILE=~/.pip/pip.conf
+# venv
+alias venv2='virtualenv -p `which python2.7` py2'
+alias venv3='virtualenv -p `which python3` py3'
+alias svenv2='source py2/bin/activate'
+alias svenv3='source py3/bin/activate'
+##############
+
 # Add homebrew to zsh path
 export PATH=/usr/local/bin:$PATH
 
@@ -67,7 +81,7 @@ alias g='git'
 complete -o default -o nospace -F _git g
 
 #tmux alias
-alias cl='clear && tmux clear-history'
+alias cl='clear; tmux clear-history; clear'
 
 #hdfs alias
 alias hls='hdfs dfs -ls'
@@ -173,3 +187,178 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+### KAFKA CLUSTERS ###
+export ZK_AWS_TEST=
+export ZK_AWS_STAGE=
+export ZK_AWS_PROD=
+export KAFKA_AWS_TEST=
+export KAFKA_AWS_STAGE=
+export KAFKA_AWS_PROD=
+export SCHEMA_AWS_TEST=
+export SCHEMA_AWS_STAGE=
+export SCHEMA_AWS_PROD=
+
+export ZK_LOCAL=zookeeper.local:2181
+export KAFKA_LOCAL=kafka.local:9092
+export SCHEMA_LOCAL=http://schema-registry.local:8051
+
+export CONFLUENTINC_PATH=~/confluent-3.0.0/bin
+
+function consume () {
+  PARAMS=""
+
+  while [ "$1" != "" ]; do
+    case "$1" in
+      -t|--topic)
+        TOPIC=$2
+        shift 2
+        ;;
+      -k|--kafka)
+        KAFKA=$2
+        shift 2
+        ;;
+      -s|--schema)
+        SCHEMA=$2
+        shift 2
+        ;;
+      --) # end argument parsing
+        shift
+        break
+        ;;
+      -*|--*) # unsupported flags
+        echo "Error: Unsupported flag $1" >&2
+        return
+        ;;
+      *) # preserve positional arguments
+        PARAMS="$PARAMS $1"
+        shift
+        ;;
+    esac
+  done
+
+  echo "topic=$TOPIC"
+  echo "bootstrap server=$KAFKA"
+  echo "schema registry=$SCHEMA"
+
+  $CONFLUENTINC_PATH/kafka-avro-console-consumer \
+  --new-consumer \
+  --bootstrap-server $KAFKA \
+  --topic $TOPIC \
+  --property schema.registry.url=$SCHEMA \
+  --property print.key=true
+}
+
+function produce () {
+  PARAMS=""
+
+  while [ "$1" != "" ]; do
+    case "$1" in
+      -t|--topic)
+        TOPIC=$2
+        shift 2
+        ;;
+      -k|--kafka)
+        KAFKA=$2
+        shift 2
+        ;;
+      -s|--schema)
+        SCHEMA=$2
+        shift 2
+        ;;
+      --schema-key)
+        SCHEMA_KEY=$2
+        shift 2
+        ;;
+      --schema-value)
+        SCHEMA_VALUE=$2
+        shift 2
+        ;;
+      --) # end argument parsing
+        shift
+        break
+        ;;
+      -*|--*) # unsupported flags
+        echo "Error: Unsupported flag $1" >&2
+        return
+        ;;
+      *) # preserve positional arguments
+        PARAMS="$PARAMS $1"
+        shift
+        ;;
+    esac
+  done
+
+  echo "topic=$TOPIC"
+  echo "bootstrap server=$KAFKA"
+  echo "schema registry=$SCHEMA"
+  echo "schema key=$SCHEMA_KEY"
+  echo "schema value=$SCHEMA_VALUE"
+
+  $CONFLUENTINC_PATH/kafka-avro-console-producer \
+  --broker-list $KAFKA \
+  --topic $TOPIC \
+  --property 'key.separator=;' \
+  --property key.schema="$SCHEMA_KEY" \
+  --property value.schema="$SCHEMA_VALUE" \
+  --property schema.registry.url="$SCHEMA";
+  #--property parse.key=true \
+  #--property key.schema='{"type":"record","name":"opportunityScoringEvent","namespace":"com.homeaway.mps","fields":[{"name":"unitUuid","type":"string"}]}' \
+  #--property value.schema='{"type":"record","name":"opportunityScoringEvent","namespace":"com.homeaway.mps","fields":[{"name":"unitUuid","type":"string"}]}' \
+}
+
+function consumeAwsProd () {
+    consume -k $KAFKA_AWS_PROD -s $SCHEMA_AWS_PROD -t $1
+}
+
+function consumeAwsStage () {
+    consume -k $KAFKA_AWS_STAGE -s $SCHEMA_AWS_STAGE -t $1
+}
+
+function consumeAwsTest () {
+    consume -k $KAFKA_AWS_TEST -s $SCHEMA_AWS_TEST -t $1
+}
+
+function consumeAusProd () {
+    consume -k $KAFKA_AUS_PROD -s $SCHEMA_AUS_PROD -t $1
+}
+
+function consumeAusStage () {
+    consume -k $KAFKA_AUS_STAGE -s $SCHEMA_AUS_STAGE -t $1
+}
+
+function consumeAusTest () {
+    consume -k $KAFKA_AUS_TEST -s $SCHEMA_AUS_TEST -t $1
+}
+
+function produceAwsProd () {
+    produce -k $KAFKA_AWS_PROD -s $SCHEMA_AWS_PROD -t $1 --schema-key $2 --schema-value $3
+}
+
+function produceAwsStage () {
+    produce -k $KAFKA_AWS_STAGE -s $SCHEMA_AWS_STAGE -t $1 --schema-key $2 --schema-value $3
+}
+
+function produceAwsTest () {
+    produce -k $KAFKA_AWS_TEST -s $SCHEMA_AWS_TEST -t $1 --schema-key $2 --schema-value $3
+}
+
+function produceAusProd () {
+    produce -k $KAFKA_AUS_PROD -s $SCHEMA_AUS_PROD -t $1 --schema-key $2 --schema-value $3
+}
+
+function produceAusStage () {
+    produce -k $KAFKA_AUS_STAGE -s $SCHEMA_AUS_STAGE -t $1 --schema-key $2 --schema-value $3
+}
+
+function produceAusTest () {
+    produce -k $KAFKA_AUS_TEST -s $SCHEMA_AUS_TEST -t $1 --schema-key $2 --schema-value $3
+}
+
+function consumeLocal () {
+    consume -k $KAFKA_LOCAL -s $SCHEMA_LOCAL -t $1
+}
+
+function produceLocal () {
+    produce -k $KAFKA_LOCAL -s $SCHEMA_LOCAL -t $1 --schema-key $2 --schema-value $3
+}
