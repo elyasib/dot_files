@@ -4,12 +4,10 @@ set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
-"Plugin 'groenewege/vim-less'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'gre/play2vim'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'othree/html5.vim'
-"Plugin 'vim-scripts/dbext.vim'
 Plugin 'morhetz/gruvbox'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -18,11 +16,9 @@ Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround' "ysiw<symbol>: add symbol, ds: remove, cs<oldSymbol><newSymbol>: replace
 Plugin 'nathanaelkane/vim-indent-guides'
-"Plugin 'kchmck/vim-coffee-script'
 Plugin 'elzr/vim-json'
 Plugin 'Chiel92/vim-autoformat'
 Plugin 'elubow/cql-vim'
-"Plugin 'IN3D/vim-raml'
 Plugin 'felixhummel/setcolors.vim'
 Plugin 'rking/ag.vim'
 Plugin 'ctrlpvim/ctrlp.vim' "<C-p>: search
@@ -32,7 +28,12 @@ Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'Shougo/denite.nvim'
 Plugin 'udalov/kotlin-vim'
-Plugin 'ensime/ensime-vim'
+"Plugin 'ensime/ensime-vim'
+Plugin 'avakhov/vim-yaml'
+"Plugin 'groenewege/vim-less'
+"Plugin 'vim-scripts/dbext.vim'
+"Plugin 'kchmck/vim-coffee-script'
+"Plugin 'IN3D/vim-raml'
 call vundle#end()
 
 filetype plugin indent on
@@ -59,16 +60,16 @@ nmap <leader>s :bnext<CR>
 nmap <leader>a :bprevious<CR>
 nmap <leader>ls :ls<CR>
 nmap <leader># :b#<CR>
-nnoremap <Leader>1 :1b<CR>
-nnoremap <Leader>2 :2b<CR>
-nnoremap <Leader>3 :3b<CR>
-nnoremap <Leader>4 :4b<CR>
-nnoremap <Leader>5 :5b<CR>
-nnoremap <Leader>6 :6b<CR>
-nnoremap <Leader>7 :7b<CR>
-nnoremap <Leader>8 :8b<CR>
-nnoremap <Leader>9 :9b<CR>
-nnoremap <Leader>0 :10b<CR>
+nmap <Leader>1 :1b<CR>
+nmap <Leader>2 :2b<CR>
+nmap <Leader>3 :3b<CR>
+nmap <Leader>4 :4b<CR>
+nmap <Leader>5 :5b<CR>
+nmap <Leader>6 :6b<CR>
+nmap <Leader>7 :7b<CR>
+nmap <Leader>8 :8b<CR>
+nmap <Leader>9 :9b<CR>
+nmap <Leader>0 :10b<CR>
 
 set showmatch
 set ignorecase
@@ -84,7 +85,7 @@ set number
 set title
 set visualbell
 set noerrorbells
-nnoremap ; :
+nmap ; :
 
 " INDENT CONFIG
 " Use spaces instead of tabs
@@ -96,14 +97,36 @@ set shiftwidth=4
 set tabstop=2
 set shiftround
 
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-nnoremap <left> <nop>
-nnoremap <right> <nop>
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
+nmap <up> <nop>
+nmap <down> <nop>
+nmap <left> <nop>
+nmap <right> <nop>
+imap <up> <nop>
+imap <down> <nop>
+imap <left> <nop>
+imap <right> <nop>
+
+""""""""""""""""
+"" ensime config
+""""""""""""""""
+"
+"" type checking
+""nmap <buffer> <silent> tt :EnType<CR>
+"nmap tt :EnType<CR>
+"nmap t] :EnDeclaration<CR>
+"nmap t[ :EnDeclarationSplit v<CR>
+"nmap td :EnDocBrowse<CR>
+"nmap ti :EnSuggestImport<CR>
+"nmap tc :EnTypeCheck<CR>
+"nmap tr :EnRename<CR>
+""nmap <buffer> tt :EnType<CR>
+""nmap <buffer> t] :EnDeclaration<CR>
+""nmap <buffer> t[ :EnDeclarationSplit v<CR>
+""nmap <buffer> td :EnDocBrowse<CR>
+""nmap <buffer> ti :EnSuggestImport<CR>
+""nmap <buffer> tc :EnTypeCheck<CR>
+""nmap tr :EnRename<CR>
+"""autocmd BufWritePost *.scala silent :EnTypeCheck
 
 cmap w!! w !sudo tee % >/dev/null    " w!! to save changes to a file that requieres sudo
 nmap <silent> ,/ :nohlsearch<CR>     " ,/ to clear the highlight after searching
@@ -186,6 +209,8 @@ let g:webdevicons_conceal_nerdtree_brackets = 1
 
 " temporal fix for slow scrolling
 set lazyredraw
+let g:NERDTreeHighlightCursorline = 0
+let g:NERDTreeLimitedSyntax = 1
 
 
 " vim-devicons {{{
@@ -206,7 +231,7 @@ endfunction
 command! -nargs=? Gl let @a='' | execute 'g/<args>/y A' | new | setlocal bt=nofile | put! a
 
 "scala autoformat
-noremap <F5> :Autoformat<CR>
+nmap <F5> :Autoformat<CR>
 let g:formatdef_scalafmt = "'scalafmt'"
 let g:formatters_scala = ['scalafmt']
 
@@ -219,25 +244,10 @@ autocmd FileType crontab setlocal nowritebackup
 " Denite
 call denite#custom#var('file_rec', 'command',
       \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-nnoremap <space>/ :Denite grep:.<cr>
+nmap <space>/ :Denite grep:.<cr>
 
 " yank and paste from clipboard
 set clipboard=unnamed
-
-"""""""""""""""
-" ensime config
-"""""""""""""""
-
-" type checking
-"autocmd BufWritePost *.scala silent :EnTypeCheck
-"nnoremap <localleader>t :EnType<CR>
-nnoremap <buffer> <silent> tt :EnType<CR>
-nnoremap <buffer> <silent> t] :EnDeclaration<CR>
-nnoremap <buffer> <silent> t[ :EnDeclarationSplit v<CR>
-nnoremap <buffer> <silent> td :EnDocBrowse<CR>
-nnoremap <buffer> <silent> ti :EnSuggestImport<CR>
-nnoremap <buffer> <silent> tc :EnTypeCheck<CR>
-nnoremap tr :EnRename<CR>
 
 " ctrlp
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
