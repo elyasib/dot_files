@@ -31,3 +31,6 @@
 
 # pip
 !pip.sh
+
+# pip
+!prepare-commit-message.sh
